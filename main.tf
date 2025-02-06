@@ -2,6 +2,17 @@ provider "aws" {
   region = "ap-southeast-1"
 }
 
+provider "template" {}
+
+terraform {
+  required_providers {
+    template = {
+      source  = "hashicorp/template"
+      version = "~> 2"
+    }
+  }
+}
+
 terraform {
   backend "s3" {
     bucket = "sctp-ce8-tfstate"
