@@ -1,30 +1,34 @@
+terraform {
+  required_version = ">= 0.12.14"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+    template = {
+      source  = "hashicorp/template"
+      version = "~> 2"
+    }
+  }
+
+  backend "s3" {
+    bucket = "sctp-ce8-tfstate"
+    key    = "shakee-s3-tf-ci.tfstate" # Change this if needed
+    region = "ap-southeast-1"
+  }
+}
+
 provider "aws" {
   region = "ap-southeast-1"
 }
 
 provider "template" {}
 
-terraform {
-  required_providers {
-    template = {
-      source  = "hashicorp/template"
-      version = "~> 2"
-    }
-  }
-}
-
-terraform {
-  backend "s3" {
-    bucket = "sctp-ce8-tfstate"
-    key    = "shakee-s3-tf-ci.tfstate" #Change this
-    region = "ap-southeast-1"
-  }
-}
-
 data "aws_caller_identity" "current" {}
 
 locals {
-  name_prefix = split("/", "${data.aws_caller_identity.current.arn}")[1]
+  name_prefix = split("/", data.aws_caller_identity.current.arn)[1]
   account_id  = data.aws_caller_identity.current.account_id
 }
 
